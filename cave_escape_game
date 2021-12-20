@@ -1,0 +1,126 @@
+import random
+
+north_gold = 50
+west_gold = 40
+gold = 0
+n = 0
+plaque = None
+bought = 1
+valid_directions_original = ["north", "south", "east", "west"]
+valid_directions = ["north", "south", "east", "west"]
+
+#Setting location of chest one
+chestone_int = random.randint(0, 3)
+chestone = valid_directions[chestone_int]
+# print("chest one is {} ".format(chestone))
+
+
+stepone_int = random.randint(0, 3)
+while stepone_int == chestone_int:
+    stepone_int = random.randint(0, 3)
+if stepone_int == 0:
+    stepone = valid_directions[0]
+    valid_directions.remove("south")
+elif stepone_int == 1:
+    stepone = valid_directions[1]
+    valid_directions.remove("north")
+elif stepone_int == 2:
+    stepone = valid_directions[2]
+    valid_directions.remove("west")
+else:
+    stepone = valid_directions[3]
+    valid_directions.remove("east")
+
+# print("step one is {} ".format(stepone))
+
+# Setting the location of chest two
+chesttwo_int = random.randint(0, 2)
+chesttwo = valid_directions[chesttwo_int]
+valid_directions.remove(chesttwo)
+# print("chest two is {} ".format(chesttwo))
+
+steptwo_int = random.randint(0, 1)
+steptwo = valid_directions[steptwo_int]
+
+# print("step two is {} ".format(steptwo))
+
+name = input("Please enter your name: ")
+
+if name.casefold() == "scott":
+    name = "He Who Sucks at Smash"
+    print("Hmm...rumors have it all men named scott suck at smash.  \nYou will be addressed accordingly. ")
+elif name.casefold() == "mike":
+    name = "Sweet Michael"
+    print("As you are the sweetest michael, I will refer to you as Sweet Michael")
+elif name.casefold() == "saban":
+    name = "Mullet Saban"
+    print("You seem like someone who would grow a mullet, I will refer to you as Mullet Saban")
+print("\n{}, in your search for buried treasure you became trapped in a cave and must now find your way to safety.\n"
+      "The walls are caving in and it's time to get out of dodge!\n"
+      "If you don't get out of here in 10 turns the treasure won't be the only thing buried...\n".format(name))
+
+while n < 10:
+    current_state = input("You are in room ONE, which way would you like to go? \nYou can go east, west, "
+                          "north or south: ".format(name))
+    if current_state.casefold() not in valid_directions_original:
+        print("thats not a valid direction you silly goose, we now shoot you for your crimes")
+        n = 10
+    elif west_gold != 0 and current_state.casefold() == chestone:
+        gold = gold + 40
+        print("\nyou have found a chest with 40 gold and returned to room ONE, and the chest is now empty."
+              "  \nyou now have {} gold\n".format(gold))
+        west_gold = 0
+    elif current_state.casefold() == stepone:
+        print("\nYou have made it to room TWO\n")
+        current_state = input("Where to now {}? ".format(name))
+        if north_gold != 0 and current_state.casefold() == chesttwo:
+            gold = gold + 50
+            north_gold = 0
+            print("\nyou have found a chest with 50 gold and returned to room ONE, and the chest is now empty."
+                  "  \nyou now have {} gold\n".format(gold))
+        elif current_state.casefold() == steptwo:
+            if gold != 0 and bought == 1:
+                plaque = input("\nYou approach a merchant who is hanging out in this cave for unknown reasons.\n"
+                               "He asks if you would like to buy a plaque saying you're super cool for 30 gold.\n"
+                               "You have {} gold, would you like to buy the plaque? ".format(gold))
+                if plaque.casefold() == "yes":
+                    gold = gold - 30
+                    bought = bought - 1
+                    print("You now have a plaque saying you're the best.")
+                else:
+                    print("As your self-esteem is totally fine you did not buy the plaque")
+            fee = input("\nYou approach a cave troll who demands a fee to pass. \n"
+                            "You have {} gold, how much gold do you give him?".format(gold))
+            if int(fee) < 50:
+                n += 1
+                print("\nThe troll laughs at your sad offer and sends you back to room ONE. "
+                      "\n{} turns remaining\n".format(10 - n))
+            elif gold < int(fee):
+                n += 1
+                print("\nyou do not have enough gold.  \n"
+                      "Return to room ONE and you have {} turns remaining\n".format(10 - n))
+            elif 50 <= int(fee) <= 80:
+                gold = gold - int(fee)
+                if plaque.casefold() == "yes":
+                    print("\nCongratulations You have escaped with {} gold\n"
+                          "You also have a plaque saying '{} is super cool', \nbecause you're super arrogant i guess"
+                          "".format(gold, name))
+                else:
+                    print("\nCongratulations You have escaped\n".format(gold))
+                break
+            elif int(fee) > 80:
+                n += 1
+                print("that is an offensively large amount of gold, \n"
+                      "back to start and you have {} turns remaining".format(10 - n))
+            else:
+                n += 1
+                print("\nyou dont have that much ya silly, back to the start you go! \n{} turns left\n".format(10 - n))
+        else:
+            n += 1
+            print("\nYou fell into a trap and returned to room ONE, \nyou will die in {} turns\n".format(10 - n))
+    else:
+        n += 1
+        print("\nSorry amigo, dead end this way...You go back to room ONE."
+              "\n{} turns remaining until you die.\n".format(10 - n))
+if n == 10:
+    print("You are dead")
