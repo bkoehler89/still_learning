@@ -91,7 +91,11 @@ while n < 10:
                     print("As your self-esteem is totally fine you did not buy the plaque")
             fee = input("\nYou approach a cave troll who demands a fee to pass. \n"
                             "You have {} gold, how much gold do you give him?".format(gold))
-            if int(fee) < 50:
+            if not fee.isdigit():
+                n += 1
+                print("\nYou need to enter a number ya silly, back to the start you go! "
+                      "\n{} turns remaining\n".format(10 - n))
+            elif int(fee) < 50:
                 n += 1
                 print("\nThe troll laughs at your sad offer and sends you back to room ONE. "
                       "\n{} turns remaining\n".format(10 - n))
